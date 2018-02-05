@@ -12,9 +12,8 @@ import os
 from contextlib import closing
 from werkzeug import secure_filename
 import unidecode
+import logging
 
-
-log_data = None
 log_data_type = ( 'Dive', 'Fish', 'Fix', 'Ent.', 'Info', 'other')
 log_array = [ ]
 inventory_data_type = ( 'Added', 'Removed', 'Sold')
@@ -23,7 +22,6 @@ log_config = None
 
 # when used on the RASPI
 #ROOT_DIR='/usr/local/www/ship_log'
-# when used on the MAC
 #ROOT_DIR='/Library/WebServer/Documents/logFlask'
 ROOT_DIR='/Users/tgonder/DEV/sea_ayers_log/logFlask'
 
@@ -31,13 +29,10 @@ DATABASE=ROOT_DIR + '/LOG.db'
 DATABASE_SCHEMA='LOG.schema.sql'
 
 CONFIG_FILE = ROOT_DIR + '/logFlask.config'
-DATA_LOG_FILE = ROOT_DIR + '/ship_log.data'
 LOG_FILE = ROOT_DIR + '/logFlask.log'
 
-import logging
 logging.basicConfig( filename=LOG_FILE, level=logging.DEBUG )
 
-#UPLOAD_FOLDER = ROOT_DIR + '/static/uploads'
 #ALLOWED_EXTENSIONS = set(['txt', 'pdf', 'png', 'jpg', 'jpeg', 'gif'])
 ALLOWED_EXTENSIONS = set(['jpg', 'jpeg'])
 
@@ -50,23 +45,7 @@ app.config['MAX_CONTENT_LENGTH'] = 16 * 1024 * 1024
 UPLOAD_FOLDER='uploads/'
 app.config['UPLOAD_FOLDER'] = ROOT_DIR + '/' + UPLOAD_FOLDER
 
-# set the secret key.  keep this really secret:
-app.secret_key = 'A0Zr98j/3yX R~GGH!jmN]LWX/,?RT'
 
-
-# Custom static data
-@app.route('/uploads/<filename>')
-def uploads(filename):
-    try:
-        full_filename = app.config['UPLOAD_FOLDER'] + filename
-        print ' got here into uploads...',full_filename
-        return send_from_directory(app.config['UPLOAD_FOLDER'], filename)
-    except Exception,e:
-        print 'e:',e
-
-'''
-*************************
-'''
 def connect_db():
     #print 'connect_db()... DB',app.config['DATABASE']
     try:
@@ -75,9 +54,6 @@ def connect_db():
         print 'Exception: e',e
 
 
-'''
-*************************
-'''
 def init_db():
     print 'init_db()...'
     with closing(connect_db()) as db:
@@ -86,17 +62,11 @@ def init_db():
         db.commit()
 
 
-'''
-*************************
-'''
 @app.before_request
 def before_request():
     #print 'before_request()...'
     g.db = connect_db()
 
-'''
-*************************
-'''
 @app.teardown_request
 def teardown_request(exception):
     #print 'teardown_request()...'
@@ -106,127 +76,10 @@ def teardown_request(exception):
 
 
 
-'''
-*************************
-'''
-'''
-@app.route('/clear')
-def clear():
-    print 'clear()...'
-    try:
-        g.db.execute('delete from entries where id is not NULL')
-        g.db.commit()
-        clear_session_filter()
-    except Exception,e:
-        print 'SQL delete entries() ERROR',e
-    flash("Clear DB of all log data")
-    return redirect(url_for('log'))
-'''
-
 
 def allowed_file(filename):
     return '.' in filename and \
            filename.lower().rsplit('.', 1)[1] in ALLOWED_EXTENSIONS
-
-
-
-@app.route('/pictures', methods=['GET', 'POST'])
-def pictures():
-    print 'pictures()...'
-    load_config()
-    filename = None
-    if request.method == 'POST':
-        try:
-            file = request.files['file']
-            if file and allowed_file(file.filename):
-                filename = secure_filename(file.filename)
-                save_to_filename = os.path.join(app.config['UPLOAD_FOLDER'], filename)
-                print 'uploading file:',file,'to',save_to_filename
-                file.save(save_to_filename)
-                print 'done'
-        except Exception,e:
-            print 'failed to upload file! e:',e
-
-    images = []
-    ct = 0
-    print 'looking for images in',app.config['UPLOAD_FOLDER']
-    for root, dirs, files in os.walk(app.config['UPLOAD_FOLDER']):
-      print 'root:',root
-      print 'dirs:',dirs
-      for file in files:
-        if allowed_file(file):
-            ct += 1
-            print 'ct:',ct,' file:',root + file
-            images.append('uploads/' + file)
-
-    print 'images:',images
-    return render_template('pictures.html', filename=filename, images=images, config=log_config)
-
-
-'''
-
-@app.route('/add')
-def add():
-    return render_template('jqueryexample_index.html')
-
-
-
-@app.route('/_add_numbers')
-def add_numbers():
-    """Add two numbers server side, ridiculous but well..."""
-    a = request.args.get('a', 0, type=int)
-    b = request.args.get('b', 0, type=int)
-    return jsonify(result=a + b)
-'''
-
-
-
-'''
-*************************
-'''
-'''
-@app.route('/reload')
-def reload():
-    print 'reload()...'
-    try:
-        g.db.execute('delete from entries where id is not NULL')
-        g.db.commit()
-    except Exception,e:
-        print 'SQL delete entries() ERROR',e
-
-    try:
-        row_ct = 0
-        print 'Reading:',DATA_LOG_FILE
-        with open(DATA_LOG_FILE, 'r') as csvfile:
-            reader = csv.DictReader(csvfile, delimiter='|')
-            for file_row in reader:
-                row_ct += 1
-                try:
-                    date = file_row['date']
-                    try:
-                        log_date = datetime.strptime(date, '%Y-%m-%d').strftime('%Y-%m-%d')
-                    except:
-                        print 'failed to read date format',date
-
-                    try:
-                        g.db.execute('insert into entries (date, log_type, aboard, details) values (?, ?, ?, ?)',
-                                     [log_date, file_row['type'], file_row['aboard'], file_row['details']])
-                        g.db.commit()
-                    except Exception,e:
-                        print 'SQL insert() row:',row_ct,' ERROR',e
-                except Exception,e:
-                    print 'Failed to process row',row_ct,' e',e
-    except Exception,e:
-        print 'Failed to reload data. e:',e
-
-    clear_session_filter()
-    print 'done reload() with',row_ct,'rows'
-    flash("Reload DB with {0} entries".format(row_ct))
-    return redirect(url_for('log'))
-'''
-
-
-
 
 
 def clear_session_filter():
@@ -244,17 +97,32 @@ def clear_session_filter():
 '''
 @app.route('/')
 def index():
+    session['logged_in'] = False
     return redirect(url_for('log'))
+
 
 '''
 *************************
 '''
-@app.route('/show_inventory')
-def show_inventory():
-    print 'show_inventory()...'
-    init_inventory_log()
+@app.route('/login', methods=['POST'])
+def do_admin_login():
+    print 'do_admin_login()'
+    if request.form['password'] == 'mbh' and request.form['username'] == 'henry':
+        session['logged_in'] = True
+        return redirect(url_for('log'))
+    else:
+        flash('wrong password!')
+        return render_template('login.html')
 
-    return render_template('show_inventory.html', entries=inventory_array, config=log_config)
+
+
+'''
+*************************
+'''
+@app.route("/logout")
+def logout():
+    session['logged_in'] = False
+    return log()
 
 
 
@@ -264,6 +132,9 @@ def show_inventory():
 @app.route('/log')
 def log():
     print 'log()...'
+    if not session.get('logged_in'):
+        return render_template('login.html')
+
     try:
         filter = session['search_filter']
         page = session['search_filter_page']
@@ -282,7 +153,23 @@ def log():
 @app.route('/map')
 def map():
     print 'map()...'
+    if not session.get('logged_in'):
+        return render_template('login.html')
+
     return render_template('map.html', config=log_config, doAdd=False)
+
+
+'''
+*************************
+'''
+@app.route('/show_inventory')
+def show_inventory():
+    print 'show_inventory()...'
+    if not session.get('logged_in'):
+        return render_template('login.html')
+
+    init_inventory_log()
+    return render_template('show_inventory.html', entries=inventory_array, config=log_config)
 
 
 
@@ -293,6 +180,9 @@ def map():
 @app.route('/delete_entry', methods=['GET', 'POST'])
 def delete_entry():
     print 'delete_entry()...'
+    if not session.get('logged_in'):
+        return render_template('login.html')
+
     if  request.method == 'POST':
         submit_type = request.form['btn']
         print 'submit:',submit_type
@@ -314,6 +204,9 @@ def delete_entry():
 @app.route('/delete_inventory', methods=['GET', 'POST'])
 def delete_inventory():
     print 'delete_inventory()...'
+    if not session.get('logged_in'):
+        return render_template('login.html')
+
     if  request.method == 'POST':
         submit_type = request.form['btn']
         print 'submit:',submit_type
@@ -345,6 +238,9 @@ def print_session_data():
 @app.route('/filter', methods=['GET', 'POST'])
 def filter():
     print 'filter()... Type: {0}'.format(request.method)
+    if not session.get('logged_in'):
+        return render_template('login.html')
+
 
     try:
         if  request.method == 'POST':
@@ -388,6 +284,9 @@ def filter():
 @app.route('/home')
 def home():
     print 'home()...'
+    if not session.get('logged_in'):
+        return render_template('login.html')
+
 
     session['search_filter'] = ''
     session['search_filter_page'] = 1
@@ -401,6 +300,9 @@ def home():
 @app.route('/first')
 def first():
     print 'first()...'
+    if not session.get('logged_in'):
+        return render_template('login.html')
+
 
     try:
         filter = session['search_filter']
@@ -419,7 +321,10 @@ def first():
 '''
 @app.route('/last')
 def last():
-    print 'home()...'
+    print 'last()...'
+    if not session.get('logged_in'):
+        return render_template('login.html')
+
 
     try:
         filter = session['search_filter']
@@ -445,6 +350,9 @@ def last():
 @app.route('/prev')
 def prev():
     print 'prev()...'
+    if not session.get('logged_in'):
+        return render_template('login.html')
+
 
     try:
         filter = session['search_filter']
@@ -470,6 +378,9 @@ def prev():
 @app.route('/next')
 def next():
     print 'next()...'
+    if not session.get('logged_in'):
+        return render_template('login.html')
+
 
     hasPrev = True
     try:
@@ -499,8 +410,10 @@ def next():
 @app.route('/entry', methods=['GET', 'POST'])
 def entry():
     print 'entry()... Type: {0}'.format(request.method)
+    if not session.get('logged_in'):
+        return render_template('login.html')
+
     load_config()
-    #load_data()
 
     date = ''
     aboard = ''
@@ -529,8 +442,6 @@ def entry():
             except Exception,e:
                 print 'Failed to get DB entry for ',id,' e:',e
 
-            #log = log_data[str(id)]
-            #print log
             date = db_row[1]
             log_type = db_row[2]
             aboard = db_row[3]
@@ -663,24 +574,16 @@ def entry():
 @app.route('/inventory', methods=['GET', 'POST'])
 def inventory():
     print 'inventory()... Type: {0}'.format(request.method)
-    load_config()
-    #load_data()
+    if not session.get('logged_in'):
+        return render_template('login.html')
 
+    load_config()
 
     date = ''
     lobsters_in = ''
     lobsters_out = ''
     money = ''
-    #inventory_value = ''
     details = ''
-    '''
-    inventory_type_html = ''
-    inventory_type = 'Added'
-    for html_type in inventory_data_type:
-        style = ' style="background-image:url(static/{0}.png);"'.format(html_type.lower())
-        inventory_type_html =  inventory_type_html + '<option value="' + html_type + '"' + style + '>' + html_type + '</option>'
-    print inventory_type_html
-    '''
 
     error = None
     info = None
@@ -698,8 +601,6 @@ def inventory():
             except Exception,e:
                 print 'Failed to get Inventory DB entry for ',id,' e:',e
 
-            #log = log_data[str(id)]
-            #print log
             date = db_row[1]
             lobsters_in = db_row[2]
             lobsters_out = db_row[3]
@@ -808,8 +709,12 @@ def settings():
     global log_config
 
     print 'settings()... Type: {0}'.format(request.method)
+    if not session.get('logged_in'):
+        return render_template('login.html')
+
     load_config()
     #print 'after ',log_config
+
     error = None
     if  request.method == 'POST':
         try:
@@ -867,9 +772,65 @@ def settings():
         return render_template('settings.html', config=log_config, error=error)
 
 
+
 '''
 *************************
 '''
+@app.route('/uploads/<filename>')
+def uploads(filename):
+    print 'uploads()...'
+    if not session.get('logged_in'):
+        return render_template('login.html')
+
+    try:
+        full_filename = app.config['UPLOAD_FOLDER'] + filename
+        print ' got here into uploads...',full_filename
+        return send_from_directory(app.config['UPLOAD_FOLDER'], filename)
+    except Exception,e:
+        print 'e:',e
+
+
+
+'''
+*************************
+'''
+@app.route('/pictures', methods=['GET', 'POST'])
+def pictures():
+    print 'pictures()...'
+    if not session.get('logged_in'):
+        return render_template('login.html')
+
+    load_config()
+    filename = None
+    if request.method == 'POST':
+        try:
+            file = request.files['file']
+            if file and allowed_file(file.filename):
+                filename = secure_filename(file.filename)
+                save_to_filename = os.path.join(app.config['UPLOAD_FOLDER'], filename)
+                print 'uploading file:',file,'to',save_to_filename
+                file.save(save_to_filename)
+                print 'done'
+        except Exception,e:
+            print 'failed to upload file! e:',e
+
+    images = []
+    ct = 0
+    print 'looking for images in',app.config['UPLOAD_FOLDER']
+    for root, dirs, files in os.walk(app.config['UPLOAD_FOLDER']):
+      print 'root:',root
+      print 'dirs:',dirs
+      for file in files:
+        if allowed_file(file):
+            ct += 1
+            print 'ct:',ct,' file:',root + file
+            images.append('uploads/' + file)
+
+    print 'images:',images
+    return render_template('pictures.html', filename=filename, images=images, config=log_config)
+
+
+
 
 def is_valid_date(date):
     print 'is_valid_date({0})...'.format(date)
@@ -881,9 +842,6 @@ def is_valid_date(date):
     return None
 
 
-'''
-*************************
-'''
 def load_config():
     global log_config
     print 'load_config()...'
@@ -904,9 +862,6 @@ def load_config():
 
 
 
-'''
-*************************
-'''
 def save_config():
     global log_config
     print 'save_config()...'
@@ -918,10 +873,6 @@ def save_config():
             print log_config
     except Exception,e:
         print 'Failed to write configuration file ',CONFIG_FILE,'. e:{0}'.format(e)
-
-
-
-
 
 
 def init_inventory_log():
@@ -941,7 +892,6 @@ def init_inventory_log():
 
         print 'inventory init()...'
         load_config()
-        #load_data()
 
         filter_date = None
 
@@ -1083,9 +1033,6 @@ def init_inventory_log():
 
 
 
-'''
-*************************
-'''
 def init(filter=None, page=1):
     global log_array
 
@@ -1098,9 +1045,8 @@ def init(filter=None, page=1):
 
         print 'init()...'
         load_config()
-        #load_data()
 
-        #print 'Reading:',DATA_LOG_FILE,' with Filter:',filter
+        #print 'Filter:',filter
         page = int(page)
         print 'Looking for page:', page
 
@@ -1230,5 +1176,7 @@ def init(filter=None, page=1):
 
 
 if __name__ == '__main__':
-    print 'starting LogFlask...'
+    print 'starting Sea Ayers Log...'
+    app.secret_key = 'A0Zr98j/3yX R~GGH!jmN]LWX/,?RG'
+    #app.run(host="0.0.0.0", port=8080, debug=True, ssl_context='adhoc')
     app.run(host="0.0.0.0", port=8080, debug=True)
