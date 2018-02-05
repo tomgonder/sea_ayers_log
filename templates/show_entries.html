@@ -1,0 +1,58 @@
+{% extends "layout.html" %}
+{% block body %}
+  <div class=metanav>
+  {% for message in get_flashed_messages() %}
+    <div class=flash>{{ message }}</div>
+  {% endfor %}
+  <form action="{{ url_for('filter') }}" method=post>
+  {% if doAdd %}
+      <a href="{{ url_for('entry') }}"><img src="{{ url_for('static', filename='add5.png') }}" alt="Add Log" id="ADD_IMG"  Title="Add New Log"></a>
+      <input type=text size=30 id=FILTER name=FILTER value="{% if session.search_filter %}{{ session.search_filter }}{% endif %}">
+      {% if hasPrev %}
+            <a href="{{ url_for('first') }}"><img src="{{ url_for('static', filename='first5.png') }}" alt="First" id="FIRST_IMG" Title="First"></a>
+            <a href="{{ url_for('prev') }}"><img src="{{ url_for('static', filename='prev5.png') }}" alt="Previous" id="PREV_IMG" Title="Previous"></a>
+      {% else %}
+            <img src="{{ url_for('static', filename='first5_disabled.png') }}" alt="First" id="FIRST_IMG" Title="First">
+            <img src="{{ url_for('static', filename='prev5_disabled.png') }}" alt="Previous" id="PREV_IMG" Title="Previous">
+      {% endif %}
+
+      {% if session.search_filter_index < session.search_filter_ct %}
+            <a href="{{ url_for('next') }}"><img src="{{ url_for('static', filename='next5.png') }}" alt="Next" id="NEXT_IMG"  Title="Next"></a>
+            <a href="{{ url_for('last') }}"><img src="{{ url_for('static', filename='last5.png') }}" alt="Last" id="LAST_IMG"  Title="Last"></a>
+      {% else %}
+            <img src="{{ url_for('static', filename='next5_disabled.png') }}" alt="Next" id="NEXT_IMG"  Title="Next">
+            <img src="{{ url_for('static', filename='last5_disabled.png') }}" alt="Last" id="LAST_IMG"  Title="Last">
+      {% endif %}
+
+      <br>
+      <label id=LAYOUT_SEARCH_ABOARD><input type=checkbox  name="SEARCH_ABOARD_ONLY" {% if session.SEARCH_ABOARD_ONLY %} checked{% endif %}>Search only People Aboard</label>
+      <label id=LAYOUT_SEARCH_CASE><input type=checkbox id=LAYOUT_SEARCH_CASE name="SEARCH_CASE_SENSITIVE" {% if session.SEARCH_CASE_SENSITIVE %} checked{% endif %}>case-sensitive<label>
+  {% endif %}
+  {% if doAdd and session.position_stats %}
+    <h3 style="float: right;" >{{ session.position_stats }} </h3>
+  {% endif %}
+  </form>
+  </div>
+
+  <ul class=entries>
+  {% for entry in entries %}
+    <li>
+  <form action="{{ url_for('entry') }}" method=post>
+      <a href="{{ url_for('entry') }}?id={{ entry.id }}"><img src="{{ url_for('static', filename='edit4.png') }}" alt="Edit" width="32" height="32" Title="Edit"></a>
+      <a href="{{ url_for('entry') }}?id={{ entry.id }}">
+      <span id="ENTRY_LIST_DATE">{{ entry.day_log_format }}</span>
+      {% if entry.lobsters_caught %}
+          <span id="ENTRY_LIST_LOBSTER_IMG"><img src="{{ entry.lobsters_image_url }}" width="48" height="48"></span>
+          <span id="ENTRY_LIST_LOBSTERS_CAUGHT">{{ entry.lobsters_caught }}</span>
+      {% endif %}
+      <span id="ENTRY_LIST_TYPE"><img src="{{ entry.type_image_url }}" width="32" height="32"></span>
+      <span id="ENTRY_LIST_ABOARD">{{ entry.aboard }}</span>
+      {% if entry.details_short %}<p id="ENTRY_LIST_DETAILS">{{ entry.details_short|safe }}</p>{% endif %}
+      </a>
+  </form>
+  {% else %}
+    <li><em>Unbelievable.  No entries</em>
+  {% endfor %}
+  </ul>
+{% endblock %}
+

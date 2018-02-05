@@ -1,0 +1,26 @@
+{% extends "layout.html" %}
+{% block body %}
+  <ul class=entries>
+  {% for entry in entries %}
+    <li>
+  <form action="{{ url_for('entry') }}" method=post>
+      <span id="ENTRY_LIST_LOBSTERS_DATE">{{ entry.day_log_format }}</span>
+        <span id="ENTRY_LIST_LOBSTERS">
+          {%  if entry.lobsters_in %}
+            - Added {{ entry.lobsters_in }}
+          {% elif entry.lobsters_out %}
+            - Removed {{ entry.lobsters_out }}
+          {% endif %}
+          {%  if entry.amount %}
+            - Sold ${{ entry.amount }}
+          {% endif %}
+        </span>
+      <span id="ENTRY_LIST_LOBSTERS_DETAILS"> - {{ entry.details }}</span>
+      </a>
+  </form>
+  {% else %}
+    <li><em>Unbelievable.  No entries</em>
+  {% endfor %}
+  </ul>
+{% endblock %}
+

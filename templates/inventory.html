@@ -1,0 +1,32 @@
+{% extends "layout.html" %}
+{% block body %}
+  {% if error %}<p class=error><strong>Error:</strong> {{ error }}{% endif %}
+  {% if info %}<p class=info><strong>Info:</strong> {{ info }}{% endif %}
+  <form action="{{ url_for('inventory') }}?id={{ id }}" method=post accept-charset="UTF-8">
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+      <input type="image" id="SAVE_IMG" value=Save name="btn" alt="Save" src="{{ url_for('static', filename='accept.png') }}"
+             onclick="document.getElementById('DETAILS').value = document.getElementById('INVENTORY_EDIT').innerHTML; return true;">
+      <label for="LOG_DATE">Date:</label>
+      <input type="date" name="LOG_DATE" id="INVENTORY_DATE" value="{{ date }}">
+      <label for="LOBSTERS_IN" id="INVENTORY_LABEL"> IN <input type="text" name="LOBSTERS_IN" id="LOBSTERS_IN" value="{{ lobsters_in }}" >
+      </label>
+      <label for="LOBSTERS_OUT" id="INVENTORY_LABEL"> OUT <input type="text" name="LOBSTERS_OUT" id="LOBSTERS_OUT" value="{{ lobsters_out }}">
+      </label>
+      <label for="MONEY" id="INVENTORY_LABEL">
+          $ <input type="text" name="MONEY" id="INVENTORY_MONEY" value="{{ money }}">
+      </label>
+      <input type="image" id="CANCEL_IMG" value=Cancel name="btn" src="{{ url_for('static', filename='cancel.png') }}">
+      {% if id %}
+          <input type="image" id="DELETE_IMG" value=Delete name="btn" src="{{ url_for('static', filename='trash.png') }}">
+      {% endif %}
+
+      <br>
+      {% if details %}
+          <div contenteditable="true" name="INVENTORY_EDIT" id="INVENTORY_EDIT">{{ details|safe }}</div>
+      {% else %}
+          <div contenteditable="true" name="INVENTORY_EDIT" id="INVENTORY_EDIT"
+               onfocus="if(this.innerHTML== 'Enter your inventory details here...'){ this.innerHTML=''; }; return false;">Enter your inventory details here...</div>
+      {% endif %}
+      <input style="display:none;" id="DETAILS" name="DETAILS" value="" />
+  </form>
+{% endblock %}

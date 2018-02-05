@@ -1,0 +1,15 @@
+<!doctype html>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<title>{{ config.VESSEL }} Log</title>
+<link rel=stylesheet type=text/css href="{{ url_for('static', filename='style.css') }}">
+<link rel="shortcut icon" href="{{ url_for('static', filename='favicon.ico') }}">
+<div class=page>
+  <h1 id="TITLE">{{ config.VESSEL }} Log
+      <a href="{{ url_for('settings') }}"><img src="{{ url_for('static', filename='settings.png') }}" id="SETTINGS" alt="Settings" Title="Settings"></a>
+      <a href="{{ url_for('map') }}"><img src="{{ url_for('static', filename='map.png') }}" id="MAP" alt="Map" Title="Map"></a>
+      <a href="{{ url_for('pictures') }}"><img src="{{ url_for('static', filename='pictures.png') }}" id="PICTURES" alt="Pictures" Title="Pictures"></a>
+      <a href="{{ url_for('show_inventory') }}"><img src="{{ url_for('static', filename='money.png') }}" id="LOBSTERS" alt="Inventory" Title="Inventory"></a>
+      <a href="{{ url_for('home') }}"><img src="{{ url_for('static', filename='home5.png') }}" id="HOME" alt="Home" Title="Home"></a>
+  </h1>
+  {% block body %}{% endblock %}
+</div>

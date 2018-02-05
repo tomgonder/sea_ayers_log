@@ -1,0 +1,19 @@
+{% extends "layout.html" %}
+{% block body %}
+    <form action="{{ url_for('add_sql') }}" method=post>
+      <dl>
+        <dd><input type=text size=30 name=date>
+        <dd><input type=text size=30 name=log_type>
+        <dd><input type=text size=30 name=aboard>
+        <dd><textarea name=details rows=5 cols=40></textarea>
+        <dd><input type=submit value=Share>
+      </dl>
+    </form>
+  <ul class=entries>
+  {% for entry in entries %}
+    <li><h2>{{ entry.date }}</h2>type:{{ entry.log_type|safe }} aboard:{{ entry.aboard|safe }} details: {{ entry.details|safe }}
+  {% else %}
+    <li><em>Unbelievable.  No entries here so far</em>
+  {% endfor %}
+  </ul>
+{% endblock %}

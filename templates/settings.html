@@ -1,0 +1,26 @@
+{% extends "layout.html" %}
+{% block body %}
+    {% if error %}<p class=error><strong>Error:</strong> {{ error }}{% endif %}
+    <form action="{{ url_for('settings') }}" method=post>
+    <h2>Settings
+        <input type="image" id="SAVE_IMG" value=Save name="btn" src="{{ url_for('static', filename='save.png') }}">
+        <input type="image" id="CANCEL_IMG" value=Cancel name="btn" src="{{ url_for('static', filename='cancel.png') }}">
+    </h2>
+        <br>
+        <label for="VESSEL">Boat Name:
+            <input type="text" name="VESSEL" id="VESSEL" value="{{ config.VESSEL }}">
+        </label>
+        <br>
+        <label for="CAPTAIN">Captain:
+            <input type="text" name="CAPTAIN" id="CAPTAIN" value="{{ config.CAPTAIN }}">
+        </label>
+        <br>
+        <label for="SUMMARY_TEXT">Number of characters to show per log in the summary:
+            <input type="text" name="SUMMARY_TEXT" id="SUMMARY_TEXT" value="{{ config.SUMMARY_TEXT }}">
+        </label>
+        <br>
+        <label for="SUMMARY_ROWS">Logs to show on each page in the summary:
+            <input type="text" name="SUMMARY_ROWS" id="SUMMARY_ROWS" value="{{ config.SUMMARY_ROWS }}">
+        </label>
+    </form>
+{% endblock %}

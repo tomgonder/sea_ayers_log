@@ -1,0 +1,43 @@
+{% extends "layout.html" %}
+{% block body %}
+  <div class=metanav>
+    <a href="{{ url_for('inventory') }}"><img src="{{ url_for('static', filename='add5.png') }}" alt="Add Inventory" id="ADD_IMG"  Title="Add New Inventory"></a>
+    {% if session.lobs_freezer_ct %}
+        <label id=LAYOUT_INVENTORY_STATS>Current Lobster Year Inventory added {{session.current_season_lobs_in_ct}} and removed {{session.current_season_lobs_out_ct}} with {{session.current_season_lobs_freezer_ct}} lobsters in the freezer. Income ${{session.current_season_total_income}}. Expense ${{session.current_season_total_expense}}</label>
+        <br>
+        <label id=LAYOUT_INVENTORY_STATS>Total Inventory caught {{session.lobs_in_ct}} lobsters. Total Income ${{session.total_income}}. Total Expense ${{session.total_expense}}</label>
+    {% endif %}
+  </div>
+  <ul class=entries>
+  {% for entry in entries %}
+    <li>
+  <form action="{{ url_for('inventory') }}" method=post>
+      <a href="{{ url_for('inventory') }}?id={{ entry.id }}">
+          <img src="{{ url_for('static', filename='edit4.png') }}" alt="Edit" width="16" height="16" Title="Edit"></a>
+      <a href="{{ url_for('inventory') }}?id={{ entry.id }}">
+      <span id="ENTRY_LIST_LOBSTERS_DATE">{{ entry.day_log_format }}</span>
+
+        {% if entry.current_lobster_season %}
+            <img src="{{ url_for('static', filename='star2.png') }}" alt="Current Season" width="24" height="24" Title="Current Season">
+        {% endif %}
+
+      <span id="ENTRY_LIST_LOBSTERS"> -
+        {% if entry.lobsters_in %}
+            Add {{entry.lobsters_in}}
+        {% endif %}
+
+        {% if entry.lobsters_out %}
+            Remove {{entry.lobsters_out}}
+        {% endif %}
+        {% if entry.money_formatted %}{{entry.money_formatted}}{% endif %}
+      </span>
+      <span id="ENTRY_LIST_LOBSTERS_DETAILS">{{ entry.details_short|safe }}</span>
+      </a>
+  </form>
+
+  {% else %}
+    <li><em>Unbelievable.  No entries</em>
+  {% endfor %}
+  </ul>
+{% endblock %}
+

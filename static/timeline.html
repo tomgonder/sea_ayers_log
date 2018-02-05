@@ -1,0 +1,36 @@
+<script type="text/javascript" src="https://www.google.com/jsapi?autoload={'modules':[{'name':'visualization',
+       'version':'1','packages':['timeline']}]}"></script>
+<script type="text/javascript">
+google.setOnLoadCallback(drawChart);
+
+function drawChart() {
+  var container = document.getElementById('example1');
+
+  var chart = new google.visualization.Timeline(container);
+
+  var dataTable = new google.visualization.DataTable();
+
+  dataTable.addColumn({ type: 'string', id: 'Type' });
+  dataTable.addColumn({ type: 'date', id: 'Start' });
+  dataTable.addColumn({ type: 'date', id: 'Stop' });
+
+  dataTable.addRows([
+    [ 'Bilge#1', new Date(2013,8,22,02,13,27), new Date(2013,8,22,02,13,35) ],
+    [ 'Bilge#1', new Date(2013,8,22,04,15,50), new Date(2013,8,22,04,15,55) ],
+    [ 'Bilge#2',      new Date(2013,8,22,14,17,05),  new Date(2013,8,22,14,17,35)  ],
+    [ 'Flood Alert',  new Date(2013,8,22,17,00,00),  new Date(2013,8,22,17,00,30) ],
+    [ 'Sync Loss',  new Date(2013,8,22,3,15,50),  new Date(2013,8,22,3,15,59) ],
+    [ 'Sync Loss',  new Date(2013,8,22,13,15,50),  new Date(2013,8,22,13,15,59) ],
+    [ 'Reporting',  new Date(2013,8,22),  new Date(2013,8,23) ]
+]);
+
+  var options = {
+    colors: ['#ee1111', '#603913', '#c69c6e'],
+    timeline: { rowLabelStyle: {fontName: 'Helvetica', fontSize: 24, color: '#603913' },
+                barLabelStyle: { fontName: 'Garamond', fontSize: 14 } }
+  };
+
+  chart.draw(dataTable, options);
+}
+</script>
+<div id="example1" style="width: 90%; height: 240px;"></div>

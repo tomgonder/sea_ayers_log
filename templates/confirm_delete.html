@@ -1,0 +1,9 @@
+{% extends "layout.html" %}
+{% block body %}
+  <h2>Confirm</h2>
+  <p class=error><strong>Confirm:</strong> {{ message }}
+     <form action="{{ delete_url }}?id={{ id }}" method=post accept-charset="UTF-8">
+    <input type=submit value=Delete name="btn">
+    <input type=submit value=Cancel name="btn">
+  </form>
+{% endblock %}

@@ -1,0 +1,38 @@
+{% extends "layout.html" %}
+{% block body %}
+  {% if error %}<p class=error><strong>Error:</strong> {{ error }}{% endif %}
+  {% if info %}<p class=info><strong>Info:</strong> {{ info }}{% endif %}
+  <form action="{{ url_for('entry') }}?id={{ id }}" method=post accept-charset="UTF-8">
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+      <input type="image" id="SAVE_IMG" value=Save name="btn" alt="Save" src="{{ url_for('static', filename='accept.png') }}"
+             onclick="document.getElementById('DETAILS').value = document.getElementById('LOG_EDIT').innerHTML; return true;">
+      <label for="LOG_DATE">Date:</label>
+      <input type="date" name="LOG_DATE" id="LOG_DATE" value="{{ date }}">
+      <label for="LOG_TYPE">Type:
+          <select id="LOG_TYPE" name="LOG_TYPE">{{ log_type_html|safe }}</select>
+      </label>
+      <input type="image" id="CANCEL_IMG" value=Cancel name="btn" src="{{ url_for('static', filename='cancel.png') }}">
+      {% if id %}
+          <input type="image" id="DELETE_IMG" value=Delete name="btn" src="{{ url_for('static', filename='trash.png') }}">
+      {% endif %}
+      <br>
+  <!--
+      <img src="{{ url_for('static', filename='pictures.png') }}" id="ADD_PHOTO" alt="Log Photo" Title="Log Photo">
+      <br>
+<input type=file name=file>
+      <br> -->
+      <label for="ABOARD">Aboard:
+          <input type="text" name="ABOARD" id="ABOARD" value="{{ aboard }}" >
+      </label>
+      <label for="LOBSTERS_CAUGHT"><img src="{{ url_for('static', filename='lobster.png') }}" width="48" height="48">
+          <input type="text" name="LOBSTERS_CAUGHT" id="LOBSTERS_CAUGHT" value="{{ lobsters_caught }}" >
+      </label><br>
+      {% if details %}
+          <div contenteditable="true" name="LOG_EDIT" id="LOG_EDIT">{{ details|safe }}</div>
+      {% else %}
+          <div contenteditable="true" name="LOG_EDIT" id="LOG_EDIT"
+               onfocus="if(this.innerHTML== 'Enter your log here...'){ this.innerHTML=''; }; return false;">Enter your log here...</div>
+      {% endif %}
+      <input style="display:none;" id="DETAILS" name="DETAILS" value="" />
+  </form>
+{% endblock %}

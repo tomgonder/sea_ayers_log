@@ -1,0 +1,124 @@
+body            { font-family: sans-serif; background: #eee; }
+a, h1, h2       { color: #022B5F; }
+h1, h2          { font-family: 'Georgia', serif; margin: 0; }
+h1              { font-size: 2.2em; border-bottom: 2px solid #eee; }
+h2              { font-size: 1.8em; }
+h2.strong       { font-size: 1.8em; }
+h3              { font-family: 'Georgia', serif; margin: 0; font-size: 0.5em; }
+
+.page           { margin: 2em auto; width: 60em; border: 5px solid #ccc;
+                  padding: 0.8em; background: white; }
+.entries        { list-style: none; margin: 1; padding: 0; }
+.entries li     { margin: 0.8em }
+.entries li strong    { font-size: 0.5em; }
+.entries li h2  { margin-left: -1em; }
+.add-entry      { font-size: 0.9em; border-bottom: 1px solid #ccc; }
+.add-entry dl   { font-weight: bold; }
+.metanav        { text-align: left; font-size: 1.8em; padding: 0.3em;
+                  margin-bottom: 1em; background: #fafafa; }
+.flash          { background: #CEE5F5; padding: 0.5em;
+                  border: 1px solid #AACBE2; }
+.error          { background: #F0D6D6; padding: 0.5em; }
+.info           { background: #CCE6FF; padding: 0.5em; }
+
+
+option           { font-size: 4.1em; margin-bottom: 2em;  width: 15em; }
+input[type="date"] {  width: 7em; font-size: 30px; }
+input[type="text"] {  width: 15em; font-size: 30px; }
+input[type="radio"] { margin-bottom: 0.2em; width: 5em; }
+input[type="submit"] { margin: 0.25em; font-size: 1.8em; width: 3em; }
+input[type="label"] { margin: 0.25em; font-size: 1.2em; width: 10em; }
+dt              { font-size: 3.8em; width: 10em; }
+rt              { font-size: 1.8em; }
+
+input#VESSEL    { width: 15em; margin-left: 1em; font-size: 1.3em; }
+input#CAPTAIN   { width: 15em; margin-left: 1em; font-size: 1.3em; }
+input#SUMMARY_TEXT { width: 5em; margin-left: 1em; font-size: 1.3em; }
+input#SUMMARY_ROWS { width: 5em; margin-left: 1em; font-size: 1.3em; }
+
+label           { font-size: 1.6em; width: 10em; }
+
+
+select {
+ border: 1px solid #a4a4a4; /*Same grey as default appearance*/
+ ( background: transparent; /*Would work too, but adds an ugly black border*/ )
+ font-family: times; /*Now in webkit too*/
+ font-size: 30px; /*Now in webkit too*/
+}
+
+textarea {
+ border: 1px solid #a4a4a4; /*Same grey as default appearance*/
+ ( background: transparent; /*Would work too, but adds an ugly black border*/ )
+ font-family: times; /*Now in webkit too*/
+ font-size: 20px; /*Now in webkit too*/
+}
+
+textarea.styled {
+    margin-top: 0.5em;
+    font-size: 1.8em;
+	width: 98%;
+	height: 300px;
+	border: 3px solid #cccccc;
+	padding: 5px;
+	font-family: Tahoma, sans-serif;
+}
+
+#INVENTORY_HEADER { color: #022B5F }
+
+#LOG_DATE { font-family: 'Courier New', Courier, monospace }
+#FILTER { width: 12em; }
+#ABOARD { width: 15em; margin-top: 1em; margin-left: 1em; }
+#LOBSTERS_CAUGHT { width: 3em; margin-top: 1em; margin-left: 1em; }
+#LOG_DATE {font-family: Tahoma, sans-serif; font-size: 1.3em; width: 9em; }
+#LOG_TYPE {font-family: Tahoma, sans-serif; font-size: 0.8em; width: 5em; }
+#LOG_PHOTO {font-family: Tahoma, sans-serif; font-size: 1.3em; margin-left: 1em; width: 15em; }
+#ENTRY_LIST_DATE { font-size: 1.3em; color: #022B5F;}
+#ENTRY_LIST_TYPE { margin-left: 1.3em; margin-right: 1.3em;}
+#ENTRY_LIST_ABOARD { font-family: 'Georgia', serif; color: #022B5F; font-size: 1.6em; }
+#ENTRY_LIST_LOBSTERS_DATE { font-family: 'courier', sans-serif; color: #022B5F; font-size: 1.3em; }
+#ENTRY_LIST_LOBSTERS { font-family: 'courier', sans-serif; color: #022B5F; font-size: 1.3em; }
+#ENTRY_LIST_LOBSTERS_DETAILS { font-family: 'Georgia', serif; color: #022B5F; font-size: 1.0em; }
+#ENTRY_LIST_DETAILS { font-family: 'Georgia', serif; font-size: 1.2em; margin-left: 2em; margin-right: 2em;
+                      margin-top: 0.1em; text-align:justify; background: #F5F5F5; }
+
+
+#LAYOUT_INVENTORY_STATS { vertical-align:text-top; font-size: 0.5em; color: #022B5F; position: relative; margin-top: 1em; margin-left: 1em; width: 100em; left: 0; right: 0; }
+
+#LOBSTERS_IN  {font-family: Tahoma, sans-serif; font-size: 1.3em; width: 2em; }
+#LOBSTERS_OUT {font-family: Tahoma, sans-serif; font-size: 1.3em; width: 2em; }
+#INVENTORY_DATE {font-family: Tahoma, sans-serif; font-size: 1.3em; width: 9em; }
+#INVENTORY_MONEY {font-family: Tahoma, sans-serif; font-size: 1.3em; width: 3em; }
+#INVENTORY_TYPE {font-family: Tahoma, sans-serif; font-size: 0.8em; width: 5em; }
+#INVENTORY_VALUE { width: 3em; margin-top: 1em; margin-left: 1em; }
+#INVENTORY_EDIT { font-family: 'Georgia', serif; font-size: 1.2em; margin-top: 1.5em; text-align:justify; }
+#INVENTORY_LABEL {font-size: 1.4em; width: 20em; }
+
+
+a {  text-decoration: none; }
+#DETAILS { font-family: 'Georgia', serif; font-size: 1.2em; }
+#LOG_EDIT { font-family: 'Georgia', serif; font-size: 1.4em; margin-top: 1.5em; text-align:justify; }
+#LAYOUT_SEARCH_ABOARD { font-size: 0.5em; color: #022B5F; vertical-align:text-top; margin-left: 9.3em; }
+#LAYOUT_SEARCH_CASE { font-size: 0.5em; color: #022B5F; vertical-align:text-top; }
+
+select#LOG_TYPE option[value="dive"]   { background-image:url(static/dive.png);   }
+select#LOG_TYPE option[value="fish"] { background-image:url(static/fish.png); }
+select#LOG_TYPE option[value="others"] { background-image:url(static/others.png); }
+
+
+#TITLE { margin-bottom: 0em; }
+#ADD_PHOTO { height: 40px; width: 40px; float: left; margin-left: 1em; margin-right: 1em; }
+#HOME { height: 40px; width: 40px; float: right; margin-left: 1em; margin-right: 1em; }
+#PICTURES { height: 40px; width: 40px; float: right; margin-left: 1em; margin-right: 1em; }
+#LOBSTERS { height: 40px; width: 40px; float: right; margin-left: 1em; margin-right: 1em; }
+#MAP { height: 48px; width: 48px; float: right; margin-left: 1em; margin-right: 1em; }
+#SETTINGS { height: 40px; width: 40px; float: right; margin-left: 1em; margin-right: 1em; }
+#ADD_IMG { height: 64px; width: 64px; margin-right: 1em; }
+#HOME_IMG { height: 48px; width: 48px; margin-left: 1em; }
+#PREV_IMG { height: 48px; width: 48px; margin-left: 1em; }
+#FIRST_IMG { height: 48px; width: 48px; margin-left: 1em; }
+#NEXT_IMG { height: 48px; width: 48px; margin-left: 1em; }
+#LAST_IMG { height: 48px; width: 48px; margin-left: 1em; }
+#SAVE_IMG { height: 48px; width: 48px; margin-right: 1em; }
+#CANCEL_IMG { height: 48px; width: 48px; margin-left: 1em; }
+#CANCEL_RIGHT_IMG { height: 48px; width: 48px; float: right; }
+#DELETE_IMG { height: 48px; width: 48px; margin-left: 1em; }

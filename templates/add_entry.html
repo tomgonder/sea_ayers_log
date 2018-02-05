@@ -1,0 +1,29 @@
+{% extends "layout.html" %}
+{% block body %}
+  {% if error %}<p class=error><strong>Error:</strong> {{ error }}{% endif %}
+  <form action="{{ url_for('add_entry') }}" method=post>
+      <input type="submit" value=Save name="btn">
+      <label for="LOG_DATE">Date:</label>
+      <input type="date" name="LOG_DATE" id="LOG_DATE" value="{{ current_date }}">
+      <label for="logtype">Type:
+          <select id="LOG_TYPE">
+              {% for entry in log_type %}
+                <option value="{{ entry }}" {% if entry == 'Fix' %}selected{% endif %}>{{ entry }}</option>
+              {% endfor %}
+        </select>
+      </label>
+      <input type="submit" value=Cancel name="btn">
+      <br>
+      <label for="ABOARD">Aboard:
+          <input type="text" name="ABOARD" id="aboard" class="dt" value="{{ aboard }}" >
+      </label><br>
+      <label for="LOBSTERS_CAUGHT">Lobsters Caught:
+          <input type="text" name="LOBSTERS_CAUGHT" id="lobsters_caught" class="dt" value="{{ lobsters_caught }}" >
+      </label><br>
+      {% if details %}
+          <textarea class="styled" name="DETAILS" id="styled">{{ details }}</textarea>
+      {% else %}
+          <textarea class="styled" name="DETAILS" id="styled" onfocus="this.value='';" onblur="setbg('red')">Enter your log here...</textarea>
+      {% endif %}
+  </form>
+{% endblock %}
